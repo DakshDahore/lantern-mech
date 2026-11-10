@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lantern Mech — Intelligent Hardware & Autonomous Mechatronics</title>
+  <meta name="description" content="Lantern Mech designs next-generation intelligent robotics, precision actuation, and embedded edge intelligence systems.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 2a4 4 0 0 0-4 4v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a4 4 0 0 0-4-4zm-2 6V6a2 2 0 1 1 4 0v2h-4zm-3 4h10v7H7v-7z'/></svg>">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #f59e0b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Ambient glow background */
+    .ambient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.08) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand svg {
+      width: 32px;
+      height: 32px;
+      fill: var(--primary);
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-tag {
+      font-size: 0.75rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 840px;
+      margin: 0 auto 80px auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 100px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .about-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      margin-bottom: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .about-section {
+        grid-template-columns: 1fr;
+        padding: 32px;
+      }
+    }
+
+    .about-text h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .stat-box {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .stat-box .num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat-box .lbl {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .contact-box {
+      text-align: center;
+      padding: 60px 24px;
+      background: radial-gradient(circle at center, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 80px;
+    }
+
+    .contact-box h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .contact-box p {
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 28px auto;
+    }
+
+    footer {
+      position: relative;
+      z-index: 10;
+      border-top: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--text);
+    }
+
+    .legal-links {
+      display: flex;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-bg"></div>
+
+  <nav>
+    <a href="/" class="brand">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2a4 4 0 0 0-4 4v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a4 4 0 0 0-4-4zm-2 6V6a2 2 0 1 1 4 0v2h-4zm-3 4h10v7H7v-7z"/>
+      </svg>
+      <span class="brand-name">Lantern Mech</span>
+      <span class="brand-tag">v0.1</span>
+    </a>
+    <div class="nav-links">
+      <a href="#technology">Technology</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="btn btn-primary">Contact Us</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-badge">
+        <span>✨</span> Hello World — Stealth Building Phase
+      </div>
+      <h1>Intelligent Hardware & Autonomous Mechatronics</h1>
+      <p>
+        Lantern Mech designs advanced robotics, high-precision actuation, and real-time embedded edge intelligence to automate complex physical workflows.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Request Partner Access</a>
+        <a href="#technology" class="btn btn-secondary">Explore Architecture</a>
+      </div>
+    </section>
+
+    <section id="technology" class="grid-3">
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>High-Precision Actuation</h3>
+        <p>
+          Closed-loop feedback control architectures paired with custom motor controllers delivering sub-millimeter positioning repeatability.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>Embedded Edge Intelligence</h3>
+        <p>
+          On-device quantized neural inference and adaptive sensor fusion running directly on low-power microcontrollers with zero cloud dependencies.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Fleet Telemetry & Sync</h3>
+        <p>
+          Secure edge-to-cloud observability pipelines allowing distributed robotic units to share operational telemetry and predictive health diagnostics.
+        </p>
+      </div>
+    </section>
+
+    <section id="about" class="about-section">
+      <div class="about-text">
+        <h2>Built for Precision & Reliability</h2>
+        <p>
+          Lantern Mech was founded with a singular purpose: bridging physical mechatronics with real-time neural edge intelligence. We build modular, fault-tolerant hardware systems for modern industrial and automation challenges.
+        </p>
+        <p>
+          Currently engineering core actuation platforms and spatial robotics in stealth. Our hardware prototypes undergo rigorous 24-hour cycle testing and sub-millisecond control validation.
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="num">&lt; 1 ms</div>
+          <div class="lbl">Control Loop Latency</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">100%</div>
+          <div class="lbl">Hardware On-Edge</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">24 / 7</div>
+          <div class="lbl">Reliability Tested</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">0 Cloud</div>
+          <div class="lbl">Local Fallback</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-box">
+      <h2>Partner with Lantern Mech</h2>
+      <p>
+        We are actively collaborating with forward-thinking hardware teams, research labs, and early enterprise pilot partners.
+      </p>
+      <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <a href="mailto:dahoredaksh@gmail.com?subject=Inquiry%20from%20Google%20Verification%20-%20Lantern%20Mech" class="btn btn-primary">
+          📧 dahoredaksh@gmail.com
+        </a>
+        <a href="https://github.com/DakshDahore" target="_blank" rel="noopener" class="btn btn-secondary">
+          🐙 GitHub Engineering
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      © 2026 Lantern Mech. All rights reserved.
+    </div>
+    <div class="legal-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="mailto:dahoredaksh@gmail.com">Contact</a>
+    </div>
+  </footer>
+
+</body>
+</html>
